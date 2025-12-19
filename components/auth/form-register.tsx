@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useActionState } from "react";
-import { signUpCredentials, FormState } from "@/lib/actions/Register";
+import { signUpCredentials } from "@/lib/actions/Register";
 import Link from "next/link";
 
 export default function FormRegister() {
