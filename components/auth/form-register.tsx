@@ -1,104 +1,80 @@
 "use client";
 
 import * as React from "react";
+import { useActionState } from "react";
+import { signUpCredentials, FormState } from "@/lib/actions/Register";
 import Link from "next/link";
-import { signUpCredentials } from "@/lib/actions";
 
-const FormRegister = () => {
-  const [state, formAction] = React.useActionState(signUpCredentials, null);
+export default function FormRegister() {
+  const [state, formAction] = useActionState(signUpCredentials, null);
+
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-4 max-w-md mx-auto mt-10">
       <div>
-        <label
-          htmlFor="name"
-          className="block mb-2 text-sm font-medium text-gray-900"
-        >
-          Nama
-        </label>
-        <input
-          type="text"
-          name="nama"
-          placeholder="noval"
-          className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg w-full p-2.5"
-        />
-        <div aria-live="polite" aria-atomic="true">
-          <span className="text-sm text-red-500 mt-2">
-            {state?.error?.nama}
-          </span>
-        </div>
+        <label>Nama</label>
+        <input name="nama" type="text" className="w-full border p-2 rounded" />
+        {state && "error" in state && state.error.nama && (
+          <p className="text-red-500 text-sm">{state.error.nama.join(", ")}</p>
+        )}
       </div>
+
       <div>
-        <label
-          htmlFor="email"
-          className="block mb-2 text-sm font-medium text-gray-900"
-        >
-          email
-        </label>
+        <label>Email</label>
         <input
-          type="email"
           name="email"
-          placeholder="noval@gmail.com"
-          className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg w-full p-2.5"
+          type="email"
+          className="w-full border p-2 rounded"
         />
-        <div aria-live="polite" aria-atomic="true">
-          <span className="text-sm text-red-500 mt-2">
-            {state?.error?.email}
-          </span>
-        </div>
+        {state && "error" in state && state.error.email && (
+          <p className="text-red-500 text-sm">{state.error.email.join(", ")}</p>
+        )}
       </div>
+
       <div>
-        <label
-          htmlFor="password"
-          className="block mb-2 text-sm font-medium text-gray-900"
-        >
-          Password
-        </label>
+        <label>Password</label>
         <input
-          type="password"
           name="password"
-          placeholder="*"
-          className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg w-full p-2.5"
-        />
-        <div aria-live="polite" aria-atomic="true">
-          <span className="text-sm text-red-500 mt-2">
-            {state?.error?.password}
-          </span>
-        </div>
-      </div>
-      <div>
-        <label
-          htmlFor="ConfirmPassword"
-          className="block mb-2 text-sm font-medium text-gray-900"
-        >
-          Konfirmasi Password
-        </label>
-        <input
           type="password"
-          name="ConfirmPassword"
-          placeholder="*"
-          className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg w-full p-2.5"
+          className="w-full border p-2 rounded"
         />
-        <div aria-live="polite" aria-atomic="true">
-          <span className="text-sm text-red-500 mt-2">
-            {state?.error?.ConfirmPassword}
-          </span>
-        </div>
+        {state && "error" in state && state.error.password && (
+          <p className="text-red-500 text-sm">
+            {state.error.password.join(", ")}
+          </p>
+        )}
       </div>
+
+      <div>
+        <label>Konfirmasi Password</label>
+        <input
+          name="ConfirmPassword"
+          type="password"
+          className="w-full border p-2 rounded"
+        />
+        {state && "error" in state && state.error.ConfirmPassword && (
+          <p className="text-red-500 text-sm">
+            {state.error.ConfirmPassword.join(", ")}
+          </p>
+        )}
+      </div>
+
       <button
         type="submit"
-        className="w-full text-white bg-blue-700 font-medium rounded-lg px-5 py-2.5 text-center uppercase hover:bg-blue-800"
+        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
       >
-        Buat akun
+        Buat Akun
       </button>
-      <p>
-        Sudah Punya Akun?
-        <Link href="/login">
-          <span className="font-medium pl-1 text-blue-600 hover:text-blue-700">
-            login
-          </span>
+
+      <p className="mt-4 text-center text-sm">
+        Sudah punya akun?{" "}
+        <Link href="/auth/Login" className="text-blue-600 hover:underline">
+          Login
         </Link>
       </p>
+
+      {state && "message" in state && (
+        <p className="mt-2 text-green-600 text-sm">{state.message}</p>
+      )}
     </form>
   );
-};
-export default FormRegister;
+}

@@ -18,7 +18,7 @@ export default function NavbarWrapper() {
   const [open, setOpen] = useState(false);
 
   return (
-    <Navbar className="sticky inset-x-0 top-0 z-40 w-full bg-black">
+    <Navbar className="sticky inset-x-0 top-0 z-40 w-full bg-black backdrop-blur-sm shadow-md">
       {/* DESKTOP */}
       <NavBody>
         <NavbarLogo />
@@ -53,6 +53,9 @@ export default function NavbarWrapper() {
           <Link href="/about" onClick={() => setOpen(false)}>
             About
           </Link>
+          <NavbarButton as={Link} href="/auth/Login">
+            Login
+          </NavbarButton>
         </MobileNavMenu>
       </MobileNav>
     </Navbar>

@@ -28,6 +28,6 @@ export async function GET(request: Request) {
   });
 
   // redirect ke halaman login
-  const base = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
-  return NextResponse.redirect(`${base}/login`);
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+  return NextResponse.redirect(`${base}/auth/Login`);
 }

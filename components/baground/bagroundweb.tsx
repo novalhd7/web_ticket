@@ -1,19 +1,22 @@
 "use client";
 
 import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars";
-import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes";
 
-export const StarsBackgroundDemo = () => {
-  const { resolvedTheme } = useTheme();
-
+export const StarsBackgroundDemo = ({
+  children,
+}: {
+  children?: React.ReactNode;
+}) => {
   return (
-    <StarsBackground
-      starColor={resolvedTheme === "dark" ? "#FFF" : "#000"}
-      className={cn(
-        "absolute inset-0 flex items-center justify-center rounded-xl",
-        "dark:bg-[radial-gradient(ellipse_at_bottom,_#262626_0%,_#000_100%)] bg-[radial-gradient(ellipse_at_bottom,_#f5f5f5_0%,_#fff_100%)]"
-      )}
-    />
+    <div className="relative min-h-screen overflow-hidden">
+      {/* BACKGROUND */}
+      <StarsBackground
+        starColor="#FFF"
+        className="absolute inset-0 z-0 pointer-events-none"
+      />
+
+      {/* FOREGROUND */}
+      <div className="relative z-10">{children}</div>
+    </div>
   );
 };

@@ -10,10 +10,9 @@ export default function HomeLayout({
   return (
     <>
       <NavbarWrapper />
-      <div className="absolute top-0 left-0 w-full h-screen -z-10">
-        <StarsBackgroundDemo />
-      </div>
-      <VideoTextDemo />
+      <StarsBackgroundDemo>
+        <VideoTextDemo />
+      </StarsBackgroundDemo>
       <main>{children}</main>
     </>
   );
