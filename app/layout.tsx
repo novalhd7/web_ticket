@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
+import Script from "next/script";
+import Providers from "./providers";
 import "./globals.css";
+import Footer from "../components/ui/footer";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -14,12 +17,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={`${raleway.variable}  antialiased`}>{children}</body>
+    <html lang="id">
+      <body className={raleway.variable}>
+        <Providers>{children}</Providers>
+
+        {/* ✅ MIDTRANS SNAP (BENAR) */}
+        <Script
+          src="https://app.sandbox.midtrans.com/snap/snap.js"
+          data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+          strategy="afterInteractive"
+        />
+
+        <Footer />
+      </body>
     </html>
   );
 }

@@ -27,3 +27,20 @@ export async function sendActivationEmail(email: string, token: string) {
     `,
   });
 }
+
+export async function sendResetEmail(email: string, token: string) {
+  const link = `${
+    process.env.NEXT_PUBLIC_BASE_URL
+  }/auth/Reset/password?token=${encodeURIComponent(token)}`;
+
+  await transporter.sendMail({
+    from: process.env.EMAILTRAP_FROM,
+    to: email,
+    subject: "Reset Password Web Ticket",
+    html: `
+      <h2>Reset Password</h2>
+      <p>Klik link berikut untuk mereset password Anda (berlaku sebentar):</p>
+      <a href="${link}">${link}</a>
+    `,
+  });
+}

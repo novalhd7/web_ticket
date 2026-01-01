@@ -6,25 +6,25 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import { compare } from "bcryptjs";
 import { LoginScema } from "@/lib/zod";
+import type { User } from "next-auth";
 
-// User tipe untuk NextAuth
-interface SessionUser {
-  id: string;
-  name: string | null;
-  email: string | null;
-  role: string; // harus ada, tidak optional
-  isActive: boolean; // harus ada, tidak optional
-}
+type Role = "USER" | "ADMIN";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   pages: { signIn: "/auth/Login" },
+
   providers: [
+    // ================= CREDENTIALS =================
     CredentialsProvider({
       name: "Credentials",
-      credentials: { email: { type: "email" }, password: { type: "password" } },
-      async authorize(credentials) {
+      credentials: {
+        email: { type: "email" },
+        password: { type: "password" },
+      },
+
+      async authorize(credentials): Promise<User | null> {
         if (!credentials) return null;
 
         const parsed = LoginScema.safeParse(credentials);
@@ -33,6 +33,7 @@ export const authOptions: AuthOptions = {
         const user = await prisma.user.findUnique({
           where: { email: parsed.data.email },
         });
+
         if (!user) throw new Error("USER_NOT_FOUND");
         if (!user.isActive) throw new Error("NOT_ACTIVATED");
         if (!user.password) throw new Error("OAUTH_ACCOUNT");
@@ -40,18 +41,18 @@ export const authOptions: AuthOptions = {
         const valid = await compare(parsed.data.password, user.password);
         if (!valid) throw new Error("INVALID_CREDENTIALS");
 
-        // Pastikan semua properti wajib ada
-        const sessionUser: SessionUser = {
+        // ✅ WAJIB return User (NextAuth)
+        return {
           id: user.id,
-          name: user.name ?? "",
-          email: user.email ?? "",
-          role: user.role ?? "user",
+          name: user.name,
+          email: user.email,
+          role: user.role as Role,
           isActive: user.isActive,
         };
-
-        return sessionUser; // tidak ada any
       },
     }),
+
+    // ================= GOOGLE =================
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -59,19 +60,39 @@ export const authOptions: AuthOptions = {
   ],
 
   callbacks: {
+    // ================= JWT =================
     async jwt({ token, user }) {
-      if (user) {
-        const u = user as SessionUser;
-        token.id = u.id;
-        token.role = u.role;
-        token.isActive = u.isActive;
+      // Saat login pertama
+      if (user?.email) {
+        token.email = user.email;
       }
+
+      // 🔥 PASTIKAN TOKEN SELALU PUNYA ROLE
+      if (token.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: token.email },
+          select: {
+            id: true,
+            role: true,
+            isActive: true,
+          },
+        });
+
+        if (dbUser) {
+          token.id = dbUser.id;
+          token.role = dbUser.role;
+          token.isActive = dbUser.isActive;
+        }
+      }
+
       return token;
     },
+
+    // ================= SESSION =================
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        session.user.role = token.role as Role;
         session.user.isActive = token.isActive as boolean;
       }
       return session;

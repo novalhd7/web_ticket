@@ -1,7 +1,11 @@
-import React from "react";
+import Main from "@/components/main";
 
 const page = () => {
-  return <div>page</div>;
+  return (
+    <div className="mt-16">
+      <Main />
+    </div>
+  );
 };
 
 export default page;

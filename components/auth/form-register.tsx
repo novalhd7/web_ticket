@@ -60,7 +60,7 @@ export default function FormRegister() {
 
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+        className="w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700"
       >
         Buat Akun
       </button>

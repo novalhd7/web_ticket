@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 const errorMap: Record<string, string> = {
   USER_NOT_FOUND: "Email tidak terdaftar",
@@ -25,14 +26,14 @@ export default function LoginPage() {
       redirect: false, // jangan auto-redirect
       email,
       password,
+      callbackUrl: "/",
     });
 
     if (result?.error) {
       setError(errorMap[result.error] ?? result.error);
-    } else {
-      // login berhasil, redirect ke dashboard
-      window.location.href = "/dashboard";
+      return;
     }
+    window.location.href = result?.url ?? "/";
   }
 
   return (
@@ -56,7 +57,15 @@ export default function LoginPage() {
           className="w-full border p-2"
           required
         />
-        <button className="w-full bg-black text-white py-2">Login</button>
+        <button className="w-full bg-gray-400 text-white py-2 rounded hover:bg-gray-500">
+          Login
+        </button>
+        <p className="mt-4 text-center text-sm">
+          Belum punya akun?{" "}
+          <Link href="/auth/Register" className="text-blue-600 hover:underline">
+            Register
+          </Link>
+        </p>
       </form>
     </div>
   );

@@ -18,7 +18,7 @@ export async function middleware(req: NextRequest) {
 
     // Optional: cek role atau isActive
     if (!token.isActive || token.role !== "ADMIN") {
-      url.pathname = "/auth/Login";
+      url.pathname = "/";
       return NextResponse.redirect(url);
     }
   }

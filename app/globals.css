@@ -124,5 +124,7 @@
     margin: 0;
     padding: 0;
     height: 100%;
+    background-color: rgb(51, 49, 49);
+    color: var(--color-foreground);
   }
 }

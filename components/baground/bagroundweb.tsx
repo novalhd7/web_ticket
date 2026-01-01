@@ -8,15 +8,20 @@ export const StarsBackgroundDemo = ({
   children?: React.ReactNode;
 }) => {
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* BACKGROUND */}
+    <div className="relative overflow-hidden pt-32 pb-20">
+      {/* BACKGROUND (NAIK) */}
       <StarsBackground
         starColor="#FFF"
-        className="absolute inset-0 z-0 pointer-events-none"
+        className="
+          absolute inset-0 
+          z-0 
+          pointer-events-none 
+          -translate-y-5
+        "
       />
 
       {/* FOREGROUND */}
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 flex justify-center">{children}</div>
     </div>
   );
 };
